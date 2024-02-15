@@ -21,7 +21,7 @@ module.exports.createAuctionProduct = (request, response) => {
 }
 
 module.exports.readAuctionProduct = (request, response) => {
-    connection.query('SELECT game_name , name , default_price , auction_status FROM auction_product', [], (error, result) => {
+    connection.query('SELECT game_name , name , default_price , auction_status , information , description FROM auction_product', [], (error, result) => {
         if (error) {
             response.status(200).json({ status: false, payload: [] })
         } else {

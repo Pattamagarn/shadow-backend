@@ -6,17 +6,37 @@ const dotenv = require('dotenv')
 dotenv.config({ path: 'server.env'})
 const path = require('path')
 const accountRoute = require('./routes/account-route')
+const auctionProductRoute = require('./routes/auction-product-route')
+const bannerRoute = require('./routes/banner-route')
+const financeRoute = require('./routes/finance-route')
+const gachaProductRoute = require('./routes/gacha-product-route')
+const gameNameRoute = require('./routes/game-name-route')
+const historyPaymentRoute = require('./routes/history-payment-route')
+const historyProductRoute = require('./routes/history-product-route')
+const generalProductRoute = require('./routes/general-product-route')
+const paymentMethodRoute = require('./routes/payment-method-route')
+const storeProductRoute = require('./routes/store-product-route')
 const app = express()
 
 app.use(express.json())
 app.use(cors({
     credentials: true,
-    origin: ['http://localhost:3000']
+    origin: ['http://localhost:3001']
 }))
 app.use(morgan('dev'))
 app.use(cookieParser())
 app.use('/asset', express.static(path.join(__dirname, 'asset')))
 app.use('/api',accountRoute)
+app.use('/api',auctionProductRoute)
+app.use('/api',bannerRoute)
+app.use('/api',financeRoute)
+app.use('/api',gachaProductRoute)
+app.use('/api',gameNameRoute)
+app.use('/api',historyPaymentRoute)
+app.use('/api',historyProductRoute)
+app.use('/api',generalProductRoute)
+app.use('/api',paymentMethodRoute)
+app.use('/api',storeProductRoute)
 
 const port = process.env.PORT || 8080
 app.listen(port, () => {
