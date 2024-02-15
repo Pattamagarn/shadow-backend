@@ -7,3 +7,11 @@ exports.validationAccount = (request, response) => {
 exports.signUpAccount = (request, response) => {
     accountModel.signUpAccount(request, response)
 }
+
+exports.signInAccount = (request, response) => {
+    accountModel.signInAccount(request, response)
+}
+
+exports.authenticationAccount = (request, response) => {
+    accountModel.authenticationAccount(request, response)
+}

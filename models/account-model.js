@@ -1,4 +1,8 @@
+const { response } = require('express')
 const connection = require('./connection')
+const jsonwebtoken = require('jsonwebtoken')
+const cookie = require('cookie')
+const SECRET = process.env.SECRET
 
 module.exports.validationAccount = (request, response) => {
     const atLeastOneUppercase = /[A-Z]/g
@@ -65,4 +69,35 @@ module.exports.signUpAccount = (request, response) => {
             })
         }
     })
+}
+
+module.exports.signInAccount = (request, response) => {
+    const requestEmail = request.body.email
+    connection.query('SELECT email, suspended_status, role FROM account WHERE email = ?', [requestEmail], (error, result) => {
+        if(error || result.length !== 1){
+            response.status(200).json({status: false, payload: 'ชื่อผู้ใช้ หรือรหัสผ่านไม่ถูกต้อง'})
+        }else if(result[0].suspended_status !== 0){
+            response.status(200).json({status: false, payload: 'บัญชีนี้ถูกระงับ'})
+        }else{ 
+            const token = jsonwebtoken.sign({email: result[0].email}, SECRET, { expiresIn: '1h' })
+            response.cookie('token', token, {
+                maxAge: 300000,
+                secure: true,
+                httpOnly: true,
+                sameSite: 'none',
+            })
+            response.status(200).json({status: true, payload: token})
+        }
+    })
+}
+
+module.exports.authenticationAccount = (request, response) => {
+    try{
+        const token = request.cookies.token
+        const decoded = jsonwebtoken.verify(token, SECRET)
+        // response.status(200).json({status: true, payload: decoded})
+        response.status(200).json({status: true})
+    }catch(error){
+        response.status(200).json({status: false, payload: 'เกิดข้อผิดพลาดที่ไม่รู้จัก'})
+    }
 }
