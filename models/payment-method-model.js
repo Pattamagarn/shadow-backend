@@ -1,20 +1,38 @@
 const connection = require('./connection')
+const jsonwebtoken = require('jsonwebtoken')
+const SECRET = process.env.SECRET
+const multer = require('multer')
+const uuid = require('uuid')
+const path = require('path')
+const fs = require('fs')
+const storagePaymentMethod = multer.diskStorage({
+    destination: (request, file, callback) => {
+        callback(null, './asset/payment-method')
+    },
+    filename: (request, file, callback) => {
+        const fileExtension = file.originalname.split('.')[1]
+        const fileName = `${uuid.v4()}${Date.now()}${Math.round(Math.random() * 1E9)}.${fileExtension}`
+        callback(null, fileName)
+        request.on('aborted', () => {
+            const fullPath = path.join('./asset/payment-method', fileName)
+            fs.unlinkSync(fullPath)
+        })
+    }
+})
 
-module.exports.paymentMethodInsert = (request, response) => {
-    const requestUUID = request.file.filename.split('.')[0]
-    const requestMethod = request.body.method
-    const requestInformation = `${request.file.destination}/${request.file.filename}`
-    connection.query('INSERT INTO payment_method (uuid, method, information) VALUES (?, ?, ?)', [requestUUID, requestMethod, requestInformation], (error, result) => {
-        if(error){
-            response.status(200).json({status: false, payload: error})
+const upload = multer({
+    storage: storagePaymentMethod,
+    fileFilter: (request, file, callback) => {
+        if(file.mimetype === 'image/png'){
+            callback(null, true)
         }else{
-            response.status(200).json({status: true, payload: result})
+            callback(new Error('ใช้ได้แค่ไฟล์ .png เท่านั้น'), false)
         }
-    })
-}
+    }
+})
 
 module.exports.paymentMethodSelect = (request, response) => {
-    connection.query('SELECT uuid, method, information, create_at, update_at from payment_method', [], (error, result) => {
+    connection.query('SELECT uuid, method, information, create_at, update_at FROM payment_method', [], (error, result) => {
         if(error){
             response.status(200).json({status: false, payload: error})
         }else{
@@ -23,14 +41,46 @@ module.exports.paymentMethodSelect = (request, response) => {
     })
 }
 
-module.exports.paymentMethodUpdate = (request, response) => {
+module.exports.paymentMethodUpdateImage = (request, response) => {
+    upload.single('file')(request, response, (error) => {
+        if(error){
+            response.status(200).json({status: false, payload: 'ใช้ได้แค่ไฟล์ .png เท่านั้น'})
+        }else{
+            try{
+                const token = request.cookies.token
+                jsonwebtoken.verify(token, SECRET)
+                const requestUUID = request.body.uuid
+                const requestInformation = request.file.filename
+                connection.query('SELECT uuid, method, information, create_at, update_at FROM payment_method WHERE uuid = ?', [requestUUID], (error, result) => {
+                    if(error){
+                        response.status(200).json({status: false, payload: 'แก้ไขล้มเหลว'})
+                    }else{
+                        fs.unlinkSync(path.join('./asset/payment-method', result[0].information))
+                        connection.query('UPDATE payment_method SET information = ?, update_at = ? WHERE uuid = ?', [requestInformation, Date.now(), requestUUID], (error, result) => {
+                            if(error){
+                                response.status(200).json({status: false, payload: 'แก้ไขล้มเหลว'})
+                            }else{
+                                response.status(200).json({status: true, payload: 'แก้ไขสำเร็จ'})
+                            }
+                        })
+                    }
+                })
+            }catch(error){
+                fs.unlinkSync(path.join('./asset/payment-method', request.file.filename))
+                response.status(200).json({status: false, payload: 'แก้ไขล้มเหลว'})
+            }
+        }
+    })
+}
+
+module.exports.paymentMethodUpdateVideo = (request, response) => {
     const requestUUID = request.body.uuid
-    const requestInformation = `${request.file.destination}/${request.file.filename}`
+    const requestInformation = request.body.information
     connection.query('UPDATE payment_method SET information = ?, update_at = ? WHERE uuid = ?', [requestInformation, Date.now(), requestUUID], (error, result) => {
         if(error){
-            response.status(200).json({status: false, payload: error})
+            response.status(200).json({status: false, payload: 'แก้ไขล้มเหลว'})
         }else{
-            response.status(200).json({status: true, payload: result})
+            response.status(200).json({status: true, payload: 'แก้ไขสำเร็จ'})
         }
     })
 }
