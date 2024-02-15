@@ -19,7 +19,8 @@ module.exports.createGeneralProduct = (request, response) => {
 }
 
 module.exports.readGeneralProduct = (request, response) => {
-    connection.query('SELECT game_name , name , special_price , normal_price , special_price_status FROM general_product', [], (error, result) => {
+    const name = request.body.name
+    connection.query('SELECT name , game_name , normal_price , special_price , special_price_status , information , description FROM general_product', [], (error, result) => {
         if (error) {
             response.status(200).json({ status: false, payload: [] })
         } else {

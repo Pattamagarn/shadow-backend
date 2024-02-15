@@ -19,7 +19,7 @@ module.exports.createGachaProduct = (request, response) => {
 }
 
 module.exports.readGachaProduct = (request, response) => {
-    connection.query('SELECT game_name , name , chance FROM gacha_product', [], (error, result) => {
+    connection.query('SELECT game_name , name , chance , information , description FROM gacha_product', [], (error, result) => {
         if (error) {
             response.status(200).json({ status: false, payload: [] })
         } else {
