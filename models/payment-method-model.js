@@ -55,7 +55,8 @@ module.exports.paymentMethodUpdateImage = (request, response) => {
                     if(error){
                         response.status(200).json({status: false, payload: 'แก้ไขล้มเหลว'})
                     }else{
-                        fs.unlinkSync(path.join('./asset/payment-method', result[0].information))
+                        const information = result[0].information
+                        fs.unlinkSync(path.join('./asset/payment-method', information))
                         connection.query('UPDATE payment_method SET information = ?, update_at = ? WHERE uuid = ?', [requestInformation, Date.now(), requestUUID], (error, result) => {
                             if(error){
                                 response.status(200).json({status: false, payload: 'แก้ไขล้มเหลว'})
