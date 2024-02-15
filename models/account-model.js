@@ -3,10 +3,32 @@ const jsonwebtoken = require('jsonwebtoken')
 const SECRET = process.env.SECRET
 const multer = require('multer')
 const uuid = require('uuid')
+const path = require('path')
+const fs = require('fs')
 const storageAvatar = multer.diskStorage({
     destination: (request, file, callback) => {
-        callback(null, './images/account-image')
+        callback(null, './asset/avatar')
     },
+    filename: (request, file, callback) => {
+        const fileExtension = file.originalname.split('.')[1]
+        const fileName = `${uuid.v4()}${Date.now()}${Math.round(Math.random() * 1E9)}.${fileExtension}`
+        callback(null, fileName)
+        request.on('aborted', () => {
+            const fullPath = path.join('./asset/avatar', fileName)
+            fs.unlinkSync(fullPath)
+        })
+    }
+})
+
+const upload = multer({
+    storage: storageAvatar,
+    fileFilter: (request, file, callback) => {
+        if(file.mimetype === 'image/png'){
+            callback(null, true)
+        }else{
+            callback(new Error('ใช้ได้แค่ไฟล์ .png เท่านั้น'), false)
+        }
+    }
 })
 
 module.exports.validationAccount = (request, response) => {
@@ -123,4 +145,42 @@ module.exports.authenticationAccount = (request, response) => {
 }
 
 module.exports.editAccount = (request, response) => {
+    upload.single('file')(request, response, (error) => {
+        if(error){
+            response.status(200).json({status: false, payload: 'ใช้ได้แค่ไฟล์ .png เท่านั้น'})
+        }else{
+            try{
+                const token = request.cookies.token
+                jsonwebtoken.verify(token, SECRET)
+                const requestEmail = request.body.email
+                const requestUsername = request.body.username
+                const requestAvatar = request.file.filename
+                connection.query('SELECT avatar FROM account WHERE email = ?', [requestEmail], (error, result) => {
+                    if(error || result.length !== 1){
+                        response.status(200).json({status: false, payload: 'เกิดข้อผิดพลาดที่ไม่รู้จัก'})
+                    }else{
+                        const defaultAvatar = [
+                            "a.png", "b.png", "c.png", "d.png", "e.png", "f.png", "g.png",
+                            "h.png", "i.png", "j.png", "k.png", "l.png", "m.png", "n.png",
+                            "o.png", "p.png", "q.png", "r.png", "s.png", "t.png", "u.png",
+                            "v.png", "w.png", "x.png", "y.png", "z.png", "default.png"
+                        ]
+                        if(!defaultAvatar.includes(result[0].avatar)){
+                            fs.unlinkSync(path.join('./asset/avatar', result[0].avatar))
+                        }
+                        connection.query('UPDATE account SET username = ?, avatar = ?, update_at = ? WHERE email = ?', [requestUsername, requestAvatar, Date.now(), requestEmail], (error, result) => {
+                            if(error){
+                                response.status(200).json({status: false, payload: 'แก้ไขโปรไฟล์ไม่สำเร็จ'})
+                            }else{
+                                response.status(200).json({status: true, payload: 'แก้ไขโปรไฟล์สำเร็จ'})
+                            }
+                        })
+                    }
+                })
+            }catch(error){
+                fs.unlinkSync(path.join('./asset/avatar', request.file.filename))
+                response.status(200).json({status: false, payload: 'เกิดข้อผิดพลาดที่ไม่รู้จัก'})
+            }
+        }
+    })
 }

@@ -4,6 +4,7 @@ const morgan = require('morgan')
 const cookieParser = require('cookie-parser')
 const dotenv = require('dotenv')
 dotenv.config({ path: 'server.env'})
+const path = require('path')
 const accountRoute = require('./routes/account-route')
 const app = express()
 
@@ -14,6 +15,7 @@ app.use(cors({
 }))
 app.use(morgan('dev'))
 app.use(cookieParser())
+app.use('/asset', express.static(path.join(__dirname, 'asset')))
 app.use('/api',accountRoute)
 
 const port = process.env.PORT || 8080
