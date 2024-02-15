@@ -1,7 +1,7 @@
 const connection = require('./connection')
 
 module.exports.financeSelect = (request, response) => {
-    connection.query('SELECT email, cash_amount, aysel_amount, create_at, update_at from finance', [], (error, result) => {
+    connection.query('SELECT email, cash_amount, aysel_amount, create_at, update_at FROM finance', [], (error, result) => {
         if(error){
             response.status(200).json({status: false, payload: 'ดึงข้อมูลล้มเหลว'})
         }else{
