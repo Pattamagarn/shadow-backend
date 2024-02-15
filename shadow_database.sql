@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 14, 2024 at 08:23 PM
+-- Generation Time: Feb 15, 2024 at 10:51 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -37,6 +37,15 @@ CREATE TABLE `account` (
   `create_at` datetime NOT NULL DEFAULT current_timestamp(),
   `update_at` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=tis620 COLLATE=tis620_thai_ci;
+
+--
+-- Dumping data for table `account`
+--
+
+INSERT INTO `account` (`email`, `username`, `avatar`, `suspended_status`, `role`, `gacha_count`, `create_at`, `update_at`) VALUES
+('foxteary@gmail.com', 'Nutsang', 'bb09e76d-48f5-4f6b-bf7c-06dbe5c803611708018412311898819761.png', 0, 0, 0, '2024-02-15 21:44:21', '0000-00-00 00:00:00'),
+('sponser@gmail.com', 'Sponser', 's.png', 0, 0, 0, '2024-02-15 22:47:22', '2024-02-15 22:47:22'),
+('voraprot.s@ku.th', 'Nutsang', 'afca43ef-6f05-4b37-956e-141eded3d3841708017718564228053639.png', 0, 0, 0, '2024-02-15 16:14:00', '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -74,6 +83,16 @@ CREATE TABLE `banner` (
   `update_at` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=tis620 COLLATE=tis620_thai_ci;
 
+--
+-- Dumping data for table `banner`
+--
+
+INSERT INTO `banner` (`uuid`, `information`, `create_at`, `update_at`) VALUES
+('68cf8646-4e9f-4f5e-b557-6258bab5cb41', 'e0785db1-2f4a-432c-9707-d10f471d84f81708031529698545174056.png', '2024-02-16 03:58:05', '0000-00-00 00:00:00'),
+('7aca0b17-bf6c-4c08-bb08-8848392adbb7', '9d92272b-a35d-4666-b526-72d45f4161ad1708030686071259807211.png', '2024-02-16 03:58:06', '2024-02-16 03:58:06'),
+('b50b8378-fa69-4f17-891b-6ded0fbc6dd3', '1b37e74b-b265-4528-923a-e5681f775db21708030665345124846114.png', '2024-02-16 03:57:45', '2024-02-16 03:57:45'),
+('ba7b34ff-3e2a-45da-81dd-7343387572a2', 'cfbec528-66a4-47f9-966c-de210e4d84171708030684789381822422.png', '2024-02-16 03:58:04', '2024-02-16 03:58:04');
+
 -- --------------------------------------------------------
 
 --
@@ -93,10 +112,9 @@ CREATE TABLE `finance` (
 --
 
 INSERT INTO `finance` (`email`, `cash_amount`, `aysel_amount`, `create_at`, `update_at`) VALUES
-('butsang@gmail.com', 0, 0, '2024-02-15 00:54:32', '2024-02-15 00:54:32'),
-('foxteary@gmail.com', 0, 0, '2024-02-15 01:36:11', '2024-02-15 01:36:11'),
-('nutsang@gmail.com', 0, 0, '2024-02-15 00:53:00', '2024-02-15 00:53:00'),
-('poom@gmail.com', 0, 0, '2024-02-15 01:00:25', '2024-02-15 01:00:25');
+('foxteary@gmail.com', 0, 0, '2024-02-15 21:44:21', '2024-02-15 21:44:21'),
+('sponser@gmail.com', 0, 0, '2024-02-15 22:47:22', '2024-02-15 22:47:22'),
+('voraprot.s@ku.th', 200, 200, '2024-02-15 16:14:00', '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -195,6 +213,14 @@ CREATE TABLE `payment_method` (
   `create_at` datetime NOT NULL DEFAULT current_timestamp(),
   `update_at` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=tis620 COLLATE=tis620_thai_ci;
+
+--
+-- Dumping data for table `payment_method`
+--
+
+INSERT INTO `payment_method` (`uuid`, `method`, `information`, `create_at`, `update_at`) VALUES
+('68fdb45f-e504-48ef-9c58-ba6ed8cc5fc6', 'วิดีโอ', 'https://youtu.be/6eEAHM00IOE?si=OA9aJ9JERS1hDNQW', '2024-02-16 01:39:17', '0000-00-00 00:00:00'),
+('b867eb39-bb8a-47de-adb7-1e9ba4c901a4', 'รูปภาพ', 'd9bdb4de-fb90-4581-871e-99ef3b243f291708023383179988636152.png', '2024-02-16 01:38:20', '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
