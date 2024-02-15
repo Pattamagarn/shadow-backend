@@ -15,3 +15,7 @@ exports.signInAccount = (request, response) => {
 exports.authenticationAccount = (request, response) => {
     accountModel.authenticationAccount(request, response)
 }
+
+exports.editAccount = (request, response) => {
+    accountModel.editAccount(request, response)
+}
