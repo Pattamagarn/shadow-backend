@@ -1,8 +1,13 @@
-const { response } = require('express')
 const connection = require('./connection')
 const jsonwebtoken = require('jsonwebtoken')
-const cookie = require('cookie')
 const SECRET = process.env.SECRET
+const multer = require('multer')
+const uuid = require('uuid')
+const storageAvatar = multer.diskStorage({
+    destination: (request, file, callback) => {
+        callback(null, './images/account-image')
+    },
+})
 
 module.exports.validationAccount = (request, response) => {
     const atLeastOneUppercase = /[A-Z]/g
@@ -95,9 +100,27 @@ module.exports.authenticationAccount = (request, response) => {
     try{
         const token = request.cookies.token
         const decoded = jsonwebtoken.verify(token, SECRET)
-        // response.status(200).json({status: true, payload: decoded})
-        response.status(200).json({status: true})
+        const requestEmail = decoded.email
+        connection.query('SELECT email, username, avatar, role, gacha_count FROM account WHERE email = ?', [requestEmail], (error, result) => {
+            console.log(result)
+            if(error || result.length !== 1){
+                response.status(200).json({status: false, payload: 'เกิดข้อผิดพลาดที่ไม่รู้จัก'})
+            }else{
+                let resultAccount = result
+                connection.query('SELECT aysel_amount FROM finance WHERE email = ?', [requestEmail], (error, result) => {
+                    if(error || result.length !== 1){
+                        response.status(200).json({status: false, payload: 'เกิดข้อผิดพลาดที่ไม่รู้จัก'})
+                    }else{
+                        resultAccount[0].aysel_amount = result[0].aysel_amount
+                        response.status(200).json({status: true, payload: resultAccount[0]})
+                    }
+                })
+            }
+        })
     }catch(error){
         response.status(200).json({status: false, payload: 'เกิดข้อผิดพลาดที่ไม่รู้จัก'})
     }
+}
+
+module.exports.editAccount = (request, response) => {
 }
