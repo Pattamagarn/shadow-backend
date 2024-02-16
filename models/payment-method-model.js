@@ -57,7 +57,7 @@ module.exports.paymentMethodUpdateImage = (request, response) => {
                     }else{
                         const information = result[0].information
                         fs.unlinkSync(path.join('./asset/payment-method', information))
-                        connection.query('UPDATE payment_method SET information = ?, update_at = ? WHERE uuid = ?', [requestInformation, Date.now(), requestUUID], (error, result) => {
+                        connection.query('UPDATE payment_method SET information = ?, update_at = ? WHERE uuid = ?', [requestInformation, new Date(), requestUUID], (error, result) => {
                             if(error){
                                 response.status(200).json({status: false, payload: 'แก้ไขล้มเหลว'})
                             }else{
@@ -77,7 +77,7 @@ module.exports.paymentMethodUpdateImage = (request, response) => {
 module.exports.paymentMethodUpdateVideo = (request, response) => {
     const requestUUID = request.body.uuid
     const requestInformation = request.body.information
-    connection.query('UPDATE payment_method SET information = ?, update_at = ? WHERE uuid = ?', [requestInformation, Date.now(), requestUUID], (error, result) => {
+    connection.query('UPDATE payment_method SET information = ?, update_at = ? WHERE uuid = ?', [requestInformation, new Date(), requestUUID], (error, result) => {
         if(error){
             response.status(200).json({status: false, payload: 'แก้ไขล้มเหลว'})
         }else{
