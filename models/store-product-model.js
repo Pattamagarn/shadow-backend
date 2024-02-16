@@ -46,16 +46,6 @@ module.exports.updateStoreProduct = (request, response) => {
     const gameName = request.body.game_name
     const productName = request.body.product_name
     const usedStatus = request.body.used_status
-<<<<<<< HEAD
-    connection.query('UPDATE store_product SET uuid = ? , method_uuid = ? , game_name = ? , product_name = ? , used_status = ?, update_at = ? WHERE email = ? LIMIT 1',
-        [uuid, methodUUID, gameName, productName, usedStatus, Date.now(), email], (error, result) => {
-            if (error) {
-                response.status(200).json({ status: false, payload: '' })
-            } else {
-                response.status(200).json({ status: true, payload: 'แก้ไขสำเร็จ' })
-            }
-        })
-=======
     connection.query('UPDATE store_product SET uuid = ? , method_uuid = ? , game_name = ? , product_name = ? , used_status = ?, update_at = ? WHERE email = ? LIMIT 1', 
     [uuid, methodUUID, gameName, productName, usedStatus, new Date(), email], (error, result) => {
         if (error) {
@@ -64,5 +54,4 @@ module.exports.updateStoreProduct = (request, response) => {
             response.status(200).json({ status: true, payload: 'แก้ไขสำเร็จ' })
         }
     })
->>>>>>> 7991811c56deb4de37abeb4e7bd9ee29494df98c
 }
