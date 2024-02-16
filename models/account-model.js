@@ -31,6 +31,16 @@ const upload = multer({
     }
 })
 
+module.exports.accountSelect = (request, response) => {
+    connection.query('SELECT email, username, suspended_status, role FROM account', [], (error, result) => {
+        if(error){
+            response.status(200).json({status: false, payload: error})
+        }else{
+            response.status(200).json({status: true, payload: result})
+        }
+    })
+}
+
 module.exports.validationAccount = (request, response) => {
     const atLeastOneUppercase = /[A-Z]/g
     const atLeastOneLowercase = /[a-z]/g
