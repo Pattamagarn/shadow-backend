@@ -1,5 +1,9 @@
 const accountModel = require('../models/account-model')
 
+exports.accountSelect = (request, response) => {
+    accountModel.accountSelect(request, response)
+}
+
 exports.validationAccount = (request, response) => {
     accountModel.validationAccount(request, response)
 }

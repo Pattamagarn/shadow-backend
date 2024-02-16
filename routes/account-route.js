@@ -1,8 +1,8 @@
 const express = require('express')
 const router = express.Router()
-const { validationAccount, signUpAccount, signInAccount, authenticationAccount, editAccount } = require('../controllers/account-controller')
+const { accountSelect, validationAccount, signUpAccount, signInAccount, authenticationAccount, editAccount } = require('../controllers/account-controller')
 
-
+router.get('/account-select', accountSelect)
 router.post('/sign-up-validation', validationAccount)
 router.post('/sign-up-account', signUpAccount)
 router.post('/sign-in-account', signInAccount)

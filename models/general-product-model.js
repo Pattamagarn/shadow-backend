@@ -37,7 +37,7 @@ module.exports.updateGeneralProduct = (request, response) => {
     const specialPrice = request.body.special_price
     const information = request.body.information
     const description = request.body.description
-    connection.query('UPDATE general_product SET name = ? , game_name = ? , normal_price = ? , special_price = ? , information = ? , description = ? , update_at = ? WHERE uuid = ? LIMIT 1', [name, gameName, normalPrice, specialPrice, information, description, Date.now(), uuid], (error, result) => {
+    connection.query('UPDATE general_product SET name = ? , game_name = ? , normal_price = ? , special_price = ? , information = ? , description = ? , update_at = ? WHERE uuid = ? LIMIT 1', [name, gameName, normalPrice, specialPrice, information, description, new Date(), uuid], (error, result) => {
         if (error) {
             response.status(200).json({ status: false, payload: '' })
         } else {

@@ -31,6 +31,16 @@ const upload = multer({
     }
 })
 
+module.exports.accountSelect = (request, response) => {
+    connection.query('SELECT email, username, suspended_status, role FROM account', [], (error, result) => {
+        if(error){
+            response.status(200).json({status: false, payload: error})
+        }else{
+            response.status(200).json({status: true, payload: result})
+        }
+    })
+}
+
 module.exports.validationAccount = (request, response) => {
     const atLeastOneUppercase = /[A-Z]/g
     const atLeastOneLowercase = /[a-z]/g
@@ -168,7 +178,7 @@ module.exports.editAccount = (request, response) => {
                         if(!defaultAvatar.includes(result[0].avatar)){
                             fs.unlinkSync(path.join('./asset/avatar', result[0].avatar))
                         }
-                        connection.query('UPDATE account SET username = ?, avatar = ?, update_at = ? WHERE email = ?', [requestUsername, requestAvatar, Date.now(), requestEmail], (error, result) => {
+                        connection.query('UPDATE account SET username = ?, avatar = ?, update_at = ? WHERE email = ?', [requestUsername, requestAvatar, new Date(), requestEmail], (error, result) => {
                             if(error){
                                 response.status(200).json({status: false, payload: 'แก้ไขโปรไฟล์ไม่สำเร็จ'})
                             }else{
