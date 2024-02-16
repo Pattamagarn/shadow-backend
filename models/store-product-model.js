@@ -29,8 +29,7 @@ module.exports.readStoreProduct = (request, response) => {
 }
 
 module.exports.readTop10Product = (request, response) => {
-    const email = request.body.email
-    connection.query('SELECT game_name , product_name , used_status , uuid FROM store_product WHERE email = ?', [email], (error, result) => {
+    connection.query('SELECT game_name , product_name , COUNT(product_name) AS count FROM `store_product` WHERE timediff(now(), create_at) < "24:00:00" GROUP BY product_name', (error, result) => {
         if (error) {
             response.status(200).json({ status: false, payload: [] })
         } else {
