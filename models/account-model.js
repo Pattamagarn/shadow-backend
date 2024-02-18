@@ -80,9 +80,9 @@ module.exports.validationAccount = (request, response) => {
     }
 }
 
-const getDefaultAvatar = (requestEmail) => {
-    const avatarName = requestEmail.at(0).toLowerCase()
-    if(avatarName !== requestEmail.at(0).toUpperCase()){
+const getDefaultAvatar = (requestUsername) => {
+    const avatarName = requestUsername.at(0).toLowerCase()
+    if(avatarName !== requestUsername.at(0).toUpperCase()){
         return `${avatarName}.png`
     }else{
         return 'default.png'
@@ -92,7 +92,7 @@ const getDefaultAvatar = (requestEmail) => {
 module.exports.signUpAccount = (request, response) => {
     const requestEmail = request.body.email
     const requestUsername = request.body.username
-    const requestAvatar = getDefaultAvatar(requestEmail)
+    const requestAvatar = getDefaultAvatar(requestUsername)
     connection.query('INSERT INTO account (email, username, avatar) VALUES (?, ?, ?)', [requestEmail, requestUsername, requestAvatar], (error, result) => {
         if(error){
             response.status(200).json({status: false, payload: 'สร้างบัญชีล้มเหลว'})
