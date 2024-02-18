@@ -11,7 +11,7 @@ module.exports.createAuctionProduct = (request, response) => {
     const information = request.body.information
     const description = request.body.description
     connection.query('INSERT INTO auction_product (uuid, name , game_name , default_price , default_bid, start_time, end_time , information , description, create_at) VALUE(?,?,?,?,?,?,?,?,?,?)',
-        [uuid.v4(), name, gameName, defaultPrice, defaultBid, startTime, endTime, information, description,Date.now()], (error, result) => {
+        [uuid.v4(), name, gameName, defaultPrice, defaultBid, startTime, endTime, information, description,new Date()], (error, result) => {
             if (error) {
                 response.status(200).json({ status: false, payload: '' })
             } else {
@@ -40,7 +40,7 @@ module.exports.updateAuctionProduct = (request, response) => {
     const endTime = request.body.end_time
     const information = request.body.information
     const description = request.body.description
-    connection.query('UPDATE auction_product SET name = ? , game_name = ? , default_price = ? , default_bid = ?, start_time = ?, end_time = ? , information = ? , description = ? , update_at = ? WHERE uuid = ? LIMIT 1', [name, gameName, defaultPrice, defaultBid, startTime, endTime, information, description, Date.now(), uuid], (error, result) => {
+    connection.query('UPDATE auction_product SET name = ? , game_name = ? , default_price = ? , default_bid = ?, start_time = ?, end_time = ? , information = ? , description = ? , update_at = ? WHERE uuid = ? LIMIT 1', [name, gameName, defaultPrice, defaultBid, startTime, endTime, information, description, new Date(), uuid], (error, result) => {
         if (error) {
             response.status(200).json({ status: false, payload: '' })
         } else {

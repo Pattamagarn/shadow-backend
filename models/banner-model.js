@@ -83,7 +83,7 @@ module.exports.bannerUpdate = (request, response) => {
                     }else{
                         const information = result[0].information
                         fs.unlinkSync(path.join('./asset/banner', information))
-                        connection.query('UPDATE banner SET information = ?, update_at = ? WHERE uuid = ?', [requestInformation, Date.now(), requestUUID], (error, result) => {
+                        connection.query('UPDATE banner SET information = ?, update_at = ? WHERE uuid = ?', [requestInformation, new Date(), requestUUID], (error, result) => {
                             if(error){
                                 response.status(200).json({status: false, payload: 'แก้ไขล้มเหลว'})
                             }else{

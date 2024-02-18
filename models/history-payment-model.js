@@ -7,7 +7,7 @@ module.exports.createHistoryPayment = (request, response) => {
     const cashAmount = request.body.cash_amount
     const paymentStatus = request.body.payment_status
     connection.query('INSERT INTO history_payment (uuid, email , aysel_amount , cash_amount, payment_status, create_at) VALUE(?,?,?,?,?,?)',
-        [uuid.v4(), email, ayselAmount, cashAmount, paymentStatus, Date.now()], (error, result) => {
+        [uuid.v4(), email, ayselAmount, cashAmount, paymentStatus, new Date()], (error, result) => {
             if (error) {
                 response.status(200).json({ status: false, payload: '' })
             } else {

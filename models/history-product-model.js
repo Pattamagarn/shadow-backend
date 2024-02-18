@@ -8,7 +8,7 @@ module.exports.createHistoryProduct = (request, response) => {
     const productPrice = request.body.product_price
     const buyMethod = request.body.buy_method
     connection.query('INSERT INTO history_product (uuid, email , game_name , product_name, product_price, buy_method, create_at) VALUE(?,?,?,?,?,?,?)',
-        [uuid.v4(), email, gameName, productName, productPrice, buyMethod, Date.now()], (error, result) => {
+        [uuid.v4(), email, gameName, productName, productPrice, buyMethod, new Date()], (error, result) => {
             if (error) {
                 response.status(200).json({ status: false, payload: '' })
             } else {
