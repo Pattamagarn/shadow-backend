@@ -1,14 +1,19 @@
 const connection = require('./connection')
 const uuid = require('uuid')
+const jsonwebtoken = require('jsonwebtoken')
+const SECRET = process.env.SECRET
 
 module.exports.createStoreProduct = (request, response) => {
-    const email = request.body.email
-    const methodUUID = request.body.method_uuid
-    const gameName = request.body.game_name
-    const productName = request.body.product_name
-    const usedStatus = request.body.used_status
+    const requestUUID = uuid.v4()
+    const token = request.cookies.token
+    const decoded = jsonwebtoken.verify(token, SECRET)
+    const requestEmail = decoded.email
+    const requestMethodUUID = request.body.method_uuid
+    const requestGameName = request.body.game_name
+    const requestProductName = request.body.product_name
+    const requestUsedStatus = request.body.used_status
     connection.query('INSERT INTO store_product (uuid, email , method_uuid , game_name , product_name, used_status, create_at) VALUE(?,?,?,?,?,?,?)',
-        [uuid.v4(), email, methodUUID, gameName, productName, usedStatus, new Date()], (error, result) => {
+        [requestUUID, requestEmail, requestMethodUUID, requestGameName, requestProductName, requestUsedStatus, new Date()], (error, result) => {
             if (error) {
                 response.status(200).json({ status: false, payload: '' })
             } else {
@@ -18,8 +23,10 @@ module.exports.createStoreProduct = (request, response) => {
 }
 
 module.exports.readStoreProduct = (request, response) => {
-    const email = request.body.email
-    connection.query('SELECT game_name , product_name , used_status , uuid FROM store_product WHERE email = ?', [email], (error, result) => {
+    const token = request.cookies.token
+    const decoded = jsonwebtoken.verify(token, SECRET)
+    const requestEmail = decoded.email
+    connection.query('SELECT game_name , product_name , used_status , uuid FROM store_product WHERE email = ?', [requestEmail], (error, result) => {
         if (error) {
             response.status(200).json({ status: false, payload: [] })
         } else {
@@ -39,14 +46,16 @@ module.exports.readTop10Product = (request, response) => {
 }
 
 module.exports.updateStoreProduct = (request, response) => {
-    const uuid = request.body.uuid
-    const email = request.body.email
-    const methodUUID = request.body.method_uuid
-    const gameName = request.body.game_name
-    const productName = request.body.product_name
-    const usedStatus = request.body.used_status
+    const requestUUID = request.body.uuid
+    const token = request.cookies.token
+    const decoded = jsonwebtoken.verify(token, SECRET)
+    const requestEmail = decoded.email
+    const requestMethodUUID = request.body.method_uuid
+    const requestGameName = request.body.game_name
+    const requestProductName = request.body.product_name
+    const requestUsedStatus = request.body.used_status
     connection.query('UPDATE store_product SET uuid = ? , method_uuid = ? , game_name = ? , product_name = ? , used_status = ?, update_at = ? WHERE email = ? LIMIT 1', 
-    [uuid, methodUUID, gameName, productName, usedStatus, new Date(), email], (error, result) => {
+    [requestUUID, requestMethodUUID, requestGameName, requestProductName, requestUsedStatus, new Date(), requestEmail], (error, result) => {
         if (error) {
             response.status(200).json({ status: false, payload: '' })
         } else {

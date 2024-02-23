@@ -2,16 +2,17 @@ const connection = require('./connection')
 const uuid = require('uuid')
 
 module.exports.createAuctionProduct = (request, response) => {
-    const name = request.body.name
-    const gameName = request.body.game_name
-    const defaultPrice = request.body.default_price
-    const defaultBid = request.body.default_bid
-    const startTime = request.body.start_time
-    const endTime = request.body.end_time
-    const information = request.body.information
-    const description = request.body.description
+    const requestUUID = uuid.v4()
+    const requestName = request.body.name
+    const requestGameName = request.body.game_name
+    const requestDefaultPrice = request.body.default_price
+    const requestDefaultBid = request.body.default_bid
+    const requestStartTime = request.body.start_time
+    const requestEndTime = request.body.end_time
+    const requestInformation = request.body.information
+    const requestDescription = request.body.description
     connection.query('INSERT INTO auction_product (uuid, name , game_name , default_price , default_bid, start_time, end_time , information , description, create_at) VALUE(?,?,?,?,?,?,?,?,?,?)',
-        [uuid.v4(), name, gameName, defaultPrice, defaultBid, startTime, endTime, information, description,new Date()], (error, result) => {
+        [requestUUID, requestName, requestGameName, requestDefaultPrice, requestDefaultBid, requestStartTime, requestEndTime, requestInformation, requestDescription,new Date()], (error, result) => {
             if (error) {
                 response.status(200).json({ status: false, payload: '' })
             } else {
@@ -31,16 +32,17 @@ module.exports.readAuctionProduct = (request, response) => {
 }
 
 module.exports.updateAuctionProduct = (request, response) => {
-    const uuid = request.body.uuid
-    const name = request.body.name
-    const gameName = request.body.game_name
-    const defaultPrice = request.body.default_price
-    const defaultBid = request.body.default_bid
-    const startTime = request.body.start_time
-    const endTime = request.body.end_time
-    const information = request.body.information
-    const description = request.body.description
-    connection.query('UPDATE auction_product SET name = ? , game_name = ? , default_price = ? , default_bid = ?, start_time = ?, end_time = ? , information = ? , description = ? , update_at = ? WHERE uuid = ? LIMIT 1', [name, gameName, defaultPrice, defaultBid, startTime, endTime, information, description, new Date(), uuid], (error, result) => {
+    const requestUUID = request.body.uuid
+    const requestName = request.body.name
+    const requestGameName = request.body.game_name
+    const requestDefaultPrice = request.body.default_price
+    const requestDefaultBid = request.body.default_bid
+    const requestStartTime = request.body.start_time
+    const requestEndTime = request.body.end_time
+    const requestInformation = request.body.information
+    const requestDescription = request.body.description
+    connection.query('UPDATE auction_product SET name = ? , game_name = ? , default_price = ? , default_bid = ?, start_time = ?, end_time = ? , information = ? , description = ? , update_at = ? WHERE uuid = ? LIMIT 1', 
+        [requestName, requestGameName, requestDefaultPrice, requestDefaultBid, requestStartTime, requestEndTime, requestInformation, requestDescription,new Date(), requestUUID], (error, result) => {
         if (error) {
             response.status(200).json({ status: false, payload: '' })
         } else {
@@ -50,8 +52,8 @@ module.exports.updateAuctionProduct = (request, response) => {
 }
 
 module.exports.deleteAuctionProduct = (request, response) => {
-    const uuid = request.body.uuid
-    connection.query('DELETE FROM auction_product WHERE uuid = ?', [uuid], (error, result) => {
+    const requestUUID = request.body.uuid
+    connection.query('DELETE FROM auction_product WHERE uuid = ?', [requestUUID], (error, result) => {
         if (error) {
             response.status(200).json({ status: false, payload: '' })
         } else {

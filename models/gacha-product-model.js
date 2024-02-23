@@ -2,14 +2,15 @@ const connection = require('./connection')
 const uuid = require('uuid')
 
 module.exports.createGachaProduct = (request, response) => {
-    const name = request.body.name
-    const gameName = request.body.game_name
-    const chance = request.body.chance
-    const guarantee = request.body.guarantee_status
-    const information = request.body.information
-    const description = request.body.description
+    const requestUUID = uuid.v4()
+    const requestName = request.body.name
+    const requestGameName = request.body.game_name
+    const requestChance = request.body.chance
+    const requestGuarantee = request.body.guarantee_status
+    const requestInformation = request.body.information
+    const requestDescription = request.body.description
     connection.query('INSERT INTO gacha_product (uuid, name , game_name , chance , guarantee_status , information , description, create_at) VALUE(?,?,?,?,?,?,?,?)',
-        [uuid.v4(), name, gameName, chance, guarantee, information, description,new Date()], (error, result) => {
+        [requestUUID, requestName, requestGameName, requestChance, requestGuarantee, requestInformation, requestDescription,new Date()], (error, result) => {
             if (error) {
                 response.status(200).json({ status: false, payload: '' })
             } else {
@@ -29,14 +30,15 @@ module.exports.readGachaProduct = (request, response) => {
 }
 
 module.exports.updateGachaProduct = (request, response) => {
-    const uuid = request.body.uuid
-    const name = request.body.name
-    const gameName = request.body.game_name
-    const chance = request.body.chance
-    const guarantee = request.body.guarantee_status
-    const information = request.body.information
-    const description = request.body.description
-    connection.query('UPDATE gacha_product SET name = ? , game_name = ? , chance = ? , guarantee_status = ? , information = ? , description = ? , update_at = ? WHERE uuid = ? LIMIT 1', [name, gameName, chance, guarantee, information, description, new Date(), uuid], (error, result) => {
+    const requestUUID = request.body.uuid
+    const requestName = request.body.name
+    const requestGameName = request.body.game_name
+    const requestChance = request.body.chance
+    const requestGuarantee = request.body.guarantee_status
+    const requestInformation = request.body.information
+    const requestDescription = request.body.description
+    connection.query('UPDATE gacha_product SET name = ? , game_name = ? , chance = ? , guarantee_status = ? , information = ? , description = ? , update_at = ? WHERE uuid = ? LIMIT 1', 
+        [requestName, requestGameName, requestChance, requestGuarantee, requestInformation, requestDescription, new Date(), requestUUID], (error, result) => {
         if (error) {
             response.status(200).json({ status: false, payload: '' })
         } else {
@@ -46,8 +48,8 @@ module.exports.updateGachaProduct = (request, response) => {
 }
 
 module.exports.deleteGachaProduct = (request, response) => {
-    const uuid = request.body.uuid
-    connection.query('DELETE FROM gacha_product WHERE uuid = ?', [uuid], (error, result) => {
+    const requestUUID = request.body.uuid
+    connection.query('DELETE FROM gacha_product WHERE uuid = ?', [requestUUID], (error, result) => {
         if (error) {
             response.status(200).json({ status: false, payload: '' })
         } else {

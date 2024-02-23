@@ -2,14 +2,15 @@ const connection = require('./connection')
 const uuid = require('uuid')
 
 module.exports.createGeneralProduct = (request, response) => {
-    const name = request.body.name
-    const gameName = request.body.game_name
-    const normalPrice = request.body.normal_price
-    const specialPrice = request.body.special_price
-    const information = request.body.information
-    const description = request.body.description
+    const requestUUID = uuid.v4()
+    const requestName = request.body.name
+    const requestGameName = request.body.game_name
+    const requestNormalPrice = request.body.normal_price
+    const requestSpecialPrice = request.body.special_price
+    const requestInformation = request.body.information
+    const requestDescription = request.body.description
     connection.query('INSERT INTO general_product (uuid, name , game_name , normal_price , special_price , information , description, create_at) VALUE(?,?,?,?,?,?,?,?)',
-        [uuid.v4(), name, gameName, normalPrice, specialPrice, information, description,new Date()], (error, result) => {
+        [requestUUID, requestName, requestGameName, requestNormalPrice, requestSpecialPrice, requestInformation, requestDescription,new Date()], (error, result) => {
             if (error) {
                 response.status(200).json({ status: false, payload: '' })
             } else {
@@ -19,7 +20,6 @@ module.exports.createGeneralProduct = (request, response) => {
 }
 
 module.exports.readGeneralProduct = (request, response) => {
-    const name = request.body.name
     connection.query('SELECT name , game_name , normal_price , special_price , special_price_status , information , description FROM general_product', [], (error, result) => {
         if (error) {
             response.status(200).json({ status: false, payload: [] })
@@ -30,14 +30,15 @@ module.exports.readGeneralProduct = (request, response) => {
 }
 
 module.exports.updateGeneralProduct = (request, response) => {
-    const uuid = request.body.uuid
-    const name = request.body.name
-    const gameName = request.body.game_name
-    const normalPrice = request.body.normal_price
-    const specialPrice = request.body.special_price
-    const information = request.body.information
-    const description = request.body.description
-    connection.query('UPDATE general_product SET name = ? , game_name = ? , normal_price = ? , special_price = ? , information = ? , description = ? , update_at = ? WHERE uuid = ? LIMIT 1', [name, gameName, normalPrice, specialPrice, information, description, new Date(), uuid], (error, result) => {
+    const requestUUID = request.body.uuid
+    const requestName = request.body.name
+    const requestGameName = request.body.game_name
+    const requestNormalPrice = request.body.normal_price
+    const requestSpecialPrice = request.body.special_price
+    const requestInformation = request.body.information
+    const requestDescription = request.body.description
+    connection.query('UPDATE general_product SET name = ? , game_name = ? , normal_price = ? , special_price = ? , information = ? , description = ? , update_at = ? WHERE uuid = ? LIMIT 1', 
+        [requestName, requestGameName, requestNormalPrice, requestSpecialPrice, requestInformation, requestDescription, new Date(), requestUUID], (error, result) => {
         if (error) {
             response.status(200).json({ status: false, payload: '' })
         } else {
@@ -47,8 +48,8 @@ module.exports.updateGeneralProduct = (request, response) => {
 }
 
 module.exports.deleteGeneralProduct = (request, response) => {
-    const uuid = request.body.uuid
-    connection.query('DELETE FROM general_product WHERE uuid = ?', [uuid], (error, result) => {
+    const requestUUID = request.body.uuid
+    connection.query('DELETE FROM general_product WHERE uuid = ?', [requestUUID], (error, result) => {
         if (error) {
             response.status(200).json({ status: false, payload: '' })
         } else {
