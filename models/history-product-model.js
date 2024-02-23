@@ -1,5 +1,7 @@
 const connection = require('./connection')
 const uuid = require('uuid')
+const jsonwebtoken = require('jsonwebtoken')
+const SECRET = process.env.SECRET
 
 module.exports.createHistoryProduct = (request, response) => {
     const email = request.body.email
@@ -18,7 +20,11 @@ module.exports.createHistoryProduct = (request, response) => {
 }
 
 module.exports.readHistoryProduct = (request, response) => {
-    const email = request.body.email
+    const token = request.cookies.token
+    const decoded = jsonwebtoken.verify(token, SECRET)
+    const email = decoded.email
+    console.log('Hello')
+    console.log(email)
     connection.query('SELECT game_name , product_name , product_price , buy_method, create_at FROM history_product WHERE email = ?', [email], (error, result) => {
         if (error) {
             response.status(200).json({ status: false, payload: [] })
