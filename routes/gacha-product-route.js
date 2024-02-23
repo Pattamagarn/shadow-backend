@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const {createGachaProduct, readGachaProduct, updateGachaProduct, deleteGachaProduct} = require('../models/gacha-product-model')
+const {createGachaProduct, readGachaProduct, updateGachaProduct, deleteGachaProduct} = require('../controllers/gacha-product-controller')
 
 router.post('/create-gacha-product', createGachaProduct)
 router.get('/read-gacha-product', readGachaProduct)

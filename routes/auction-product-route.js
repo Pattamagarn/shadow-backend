@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const {createAuctionProduct, readAuctionProduct, updateAuctionProduct, deleteAuctionProduct} = require('../models/auction-product-model')
+const {createAuctionProduct, readAuctionProduct, updateAuctionProduct, deleteAuctionProduct} = require('../controllers/auction-product-controller')
 
 router.post('/create-auction-product', createAuctionProduct)
 router.get('/read-auction-product', readAuctionProduct)
