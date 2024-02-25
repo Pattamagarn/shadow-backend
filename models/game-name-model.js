@@ -35,7 +35,7 @@ module.exports.gameNameUpdate = (request, response) => {
 }
 
 module.exports.gameNameDelete = (request, response) => {
-    const requestUUID = request.body.uuid
+    const requestUUID = request.params.uuid
     connection.query('DELETE FROM game_name WHERE uuid = ?', [requestUUID], (error, result) => {
         if(error){
             response.status(200).json({status: false, payload: error})
